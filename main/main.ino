@@ -156,6 +156,13 @@ void Work()
 	  digitalWrite(VALVE, FUEL);
 	  digitalWrite(VENT, BOOST);
 		delay(500); //Пол секунды на устаканивание
+    
+    if (FLAME == HIGH)
+    {
+      digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, LOW);
+	    digitalWrite(VENT, LOW);
+    }
 
 
 		if (TRY >= 5)
