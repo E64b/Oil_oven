@@ -23,7 +23,6 @@ uint8_t TRY = 0;
 bool displayRedraw = true, WORK = false, START = false; //Флаги для мониторинга состояния 
 int gis = 3;
 float TEMP = 0;
-bool IGNITION = LOW, FUEL = LOW, BOOST = LOW;
 uint32_t timer = 0;
 float OLD_TEMP = 0;
 int flag = 0;
@@ -111,20 +110,17 @@ void Work()
 	{	
 		flag = 3;
 		TRY++;
-		BOOST = HIGH;
-    digitalWrite(PIEZO, IGNITION);
-	  digitalWrite(VALVE, FUEL);
-	  digitalWrite(VENT, BOOST);
+		digitalWrite(PIEZO, LOW);
+	  digitalWrite(VALVE, LOW);
+	  digitalWrite(VENT, HIGH);
 		delay(1000);
-		FUEL = HIGH;
-    digitalWrite(PIEZO, IGNITION);
-	  digitalWrite(VALVE, FUEL);
-	  digitalWrite(VENT, BOOST);
+		digitalWrite(PIEZO, LOW);
+	  digitalWrite(VALVE, HIGH);
+	  digitalWrite(VENT, HIGH);
 		delay(500);
-		IGNITION = HIGH;
-    digitalWrite(PIEZO, IGNITION);
-	  digitalWrite(VALVE, FUEL);
-	  digitalWrite(VENT, BOOST);
+		digitalWrite(PIEZO, HIGH);
+	  digitalWrite(VALVE, HIGH);
+	  digitalWrite(VENT, HIGH);
 		delay(500); //Пол секунды на устаканивание
 
     if (FLAME == HIGH)
@@ -134,15 +130,14 @@ void Work()
 	    digitalWrite(VENT, LOW);
     }
 
-
 		if (TRY >= 5)
 		{
 			displayRedraw = true;
 			START = false;
 			flag = 2;
-      digitalWrite(PIEZO, IGNITION);
-	    digitalWrite(VALVE, FUEL);
-	    digitalWrite(VENT, BOOST);
+      digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, LOW);
+	    digitalWrite(VENT, LOW);
 		}
 
 		if (FLAME == LOW)
@@ -151,10 +146,9 @@ void Work()
 			TRY = 0;
 			WORK = true;
 			START = false;
-			IGNITION = LOW;
-      digitalWrite(PIEZO, IGNITION);
-	    digitalWrite(VALVE, FUEL);
-	    digitalWrite(VENT, BOOST);
+			digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, HIGH);
+	    digitalWrite(VENT, HIGH);
 		}
 	}
 
@@ -162,20 +156,18 @@ void Work()
 	if ((WORK == true) and (TEMP <= SET_TEMP))
 	{	
 		flag = 0;
-		FUEL = HIGH;
-		BOOST = HIGH;
-    digitalWrite(PIEZO, IGNITION);
-	  digitalWrite(VALVE, FUEL);
-	  digitalWrite(VENT, BOOST);
+		digitalWrite(PIEZO, LOW);
+	  digitalWrite(VALVE, HIGH);
+	  digitalWrite(VENT, HIGH);
 	
 		if (FLAME == HIGH)
 		{
 			displayRedraw = true;
 			flag = 2;
 			WORK = false;
-      digitalWrite(PIEZO, IGNITION);
-	    digitalWrite(VALVE, FUEL);
-	    digitalWrite(VENT, BOOST);
+      digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, LOW);
+	    digitalWrite(VENT, LOW);
 		}
 	}
 
@@ -183,27 +175,16 @@ void Work()
 	if (TEMP >= SET_TEMP + gis)
 	{
 			flag = 1;
-			IGNITION = LOW;
-			FUEL = LOW;
-			BOOST = LOW;
 			WORK = false;
-      digitalWrite(PIEZO, IGNITION);
-	    digitalWrite(VALVE, FUEL);
-	    digitalWrite(VENT, BOOST);
+      digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, LOW);
+	    digitalWrite(VENT, LOW);
 	}
 }
 
-void loop(){
-	/*Send command exe*/
-	digitalWrite(PIEZO, IGNITION);
-	digitalWrite(VALVE, FUEL);
-	digitalWrite(VENT, BOOST);
-
-	ReadSensors();
-	Display();
-	Work();	
-
-  enc.tick();
+void Enc()
+{
+   enc.tick();
 	if (enc.isRight())
 	{
 		SET_TEMP++;
@@ -230,4 +211,13 @@ void loop(){
 		START = true;
 		displayRedraw = true;
   }	
+}
+void loop(){
+	/*Send command exe*/
+
+	ReadSensors();
+	Display();
+	Work();	
+  Enc();
+ 
 }
