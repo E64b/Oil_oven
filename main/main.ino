@@ -90,9 +90,9 @@ void Display(){
 			case 2:
 			lcd.setCursor(0, 1);
 			lcd.println("   !!ERROR!!    ");
-      digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, LOW);
-	    digitalWrite(VENT, LOW);
+			digitalWrite(PIEZO, LOW);
+			digitalWrite(VALVE, LOW);
+			digitalWrite(VENT, LOW);
 			break;
 
 			case 3:
@@ -106,38 +106,40 @@ void Display(){
 void Work()
 {
 	/*Режим розжига*/
-	if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and (START == true))
+	if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and (START == true) and (ERROR = false))
 	{	
 		flag = 3;
 		TRY++;
 		digitalWrite(PIEZO, LOW);
-	  digitalWrite(VALVE, LOW);
-	  digitalWrite(VENT, HIGH);
+		digitalWrite(VALVE, LOW);
+		digitalWrite(VENT, HIGH);
 		delay(1000);
 		digitalWrite(PIEZO, LOW);
-	  digitalWrite(VALVE, HIGH);
-	  digitalWrite(VENT, HIGH);
+		digitalWrite(VALVE, HIGH);
+		digitalWrite(VENT, HIGH);
 		delay(500);
 		digitalWrite(PIEZO, HIGH);
-	  digitalWrite(VALVE, HIGH);
-	  digitalWrite(VENT, HIGH);
-		delay(500); //Пол секунды на устаканивание
+		digitalWrite(VALVE, HIGH);
+		digitalWrite(VENT, HIGH);
+		delay(2500); //Пол секунды на устаканивание
+		FLAME = digitalRead(A1);
 
-    if (FLAME == HIGH)
-    {
-      digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, LOW);
-	    digitalWrite(VENT, LOW);
-    }
+		if (FLAME == HIGH)
+		{
+		digitalWrite(PIEZO, LOW);
+	  digitalWrite(VALVE, LOW);
+	  digitalWrite(VENT, LOW);
+		}
 
 		if (TRY >= 5)
 		{
 			displayRedraw = true;
 			START = false;
 			flag = 2;
-      digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, LOW);
-	    digitalWrite(VENT, LOW);
+			digitalWrite(PIEZO, LOW);
+			digitalWrite(VALVE, LOW);
+			digitalWrite(VENT, LOW);
+      ERROR = true;
 		}
 
 		if (FLAME == LOW)
@@ -147,8 +149,8 @@ void Work()
 			WORK = true;
 			START = false;
 			digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, HIGH);
-	    digitalWrite(VENT, HIGH);
+			digitalWrite(VALVE, HIGH);
+			digitalWrite(VENT, HIGH);
 		}
 	}
 
@@ -174,11 +176,12 @@ void Work()
 	/* Режим ожидания */
 	if (TEMP >= SET_TEMP + gis)
 	{
-			flag = 1;
-			WORK = false;
-      digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, LOW);
-	    digitalWrite(VENT, LOW);
+			  START = true;
+				flag = 1;
+				WORK = false;
+		  digitalWrite(PIEZO, LOW);
+			digitalWrite(VALVE, LOW);
+			digitalWrite(VENT, LOW);
 	}
 }
 
