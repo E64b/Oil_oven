@@ -45,36 +45,6 @@ void setup()
 	lcd.clear();
 }
 
-void Enc(){
-	enc.tick();
-	if (enc.isRight())
-	{
-		SET_TEMP++;
-		displayRedraw = true;
-	}
-	if (enc.isLeft())
-	{
-		SET_TEMP--;
-		displayRedraw = true;
-	}
-	if (enc.isRightH())
-	{
-		SET_TEMP += 10;
-		displayRedraw = true;
-	}
-	if (enc.isLeftH())
-	{
-		SET_TEMP -= 10;
-		displayRedraw = true;
-	}
-	if (enc.isClick())
-	{
-		TRY = 0;
-		START = true;
-		displayRedraw = true;
-  }
-}
-
 void ReadSensors(){	
   FLAME = digitalRead(A1);
 	static uint32_t tmr;
@@ -156,7 +126,7 @@ void Work()
 	  digitalWrite(VALVE, FUEL);
 	  digitalWrite(VENT, BOOST);
 		delay(500); //Пол секунды на устаканивание
-    
+
     if (FLAME == HIGH)
     {
       digitalWrite(PIEZO, LOW);
@@ -224,14 +194,40 @@ void Work()
 }
 
 void loop(){
-	delay(100);
 	/*Send command exe*/
 	digitalWrite(PIEZO, IGNITION);
 	digitalWrite(VALVE, FUEL);
 	digitalWrite(VENT, BOOST);
 
-	Enc();
 	ReadSensors();
 	Display();
-	Work();		
+	Work();	
+
+  enc.tick();
+	if (enc.isRight())
+	{
+		SET_TEMP++;
+		displayRedraw = true;
+	}
+	if (enc.isLeft())
+	{
+		SET_TEMP--;
+		displayRedraw = true;
+	}
+	if (enc.isRightH())
+	{
+		SET_TEMP += 10;
+		displayRedraw = true;
+	}
+	if (enc.isLeftH())
+	{
+		SET_TEMP -= 10;
+		displayRedraw = true;
+	}
+	if (enc.isClick())
+	{
+		TRY = 0;
+		START = true;
+		displayRedraw = true;
+  }	
 }
