@@ -13,7 +13,7 @@
 #define PIEZO 9 
 #define VALVE 10
 
-Encoder enc1(CLK, DT, SW);
+Encoder enc(CLK, DT, SW, TYPE2);
 MicroDS18B20<2> sensor;   //Init sensor
 LiquidCrystal_I2C lcd(0x27, 16, 2); //Init LCD
 
@@ -40,34 +40,43 @@ void setup()
 	pinMode(A1, INPUT);
 	pinMode(PIEZO, OUTPUT);
 	pinMode(VALVE, OUTPUT);
-	enc1.setType(TYPE2);
-	
+		
 	delay(500);
 	lcd.clear();
 }
 
 void Enc(){
-	enc1.tick();
-	if (enc1.isRight()){
+	enc.tick();
+	if (enc.isRight())
+	{
 		SET_TEMP++;
 		displayRedraw = true;
+		Display();
 	}
-	if (enc1.isLeft()){
+	if (enc.isLeft())
+	{
 		SET_TEMP--;
 		displayRedraw = true;
+		Display();
 	}
-	if (enc1.isRightH()){
+	if (enc.isRightH())
+	{
 		SET_TEMP += 10;
 		displayRedraw = true;
+		Display();
 	}
-	if (enc1.isLeftH()){
+	if (enc.isLeftH())
+	{
 		SET_TEMP -= 10;
 		displayRedraw = true;
+		Display();
 	}
-	if (enc1.isClick()){
+	if (enc.isClick())
+	{
 		TRY = 0;
 		START = true;
 		displayRedraw = true;
+		Display();
 	}
 }
 
@@ -91,7 +100,7 @@ void ReadSensors(){
 }
 
 void Display(){
-	if (displayRedraw)
+	if (displayRedraw == true)
 	{
 		lcd.clear();
 		displayRedraw = false;
