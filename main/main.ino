@@ -51,33 +51,28 @@ void Enc(){
 	{
 		SET_TEMP++;
 		displayRedraw = true;
-		Display();
 	}
 	if (enc.isLeft())
 	{
 		SET_TEMP--;
 		displayRedraw = true;
-		Display();
 	}
 	if (enc.isRightH())
 	{
 		SET_TEMP += 10;
 		displayRedraw = true;
-		Display();
 	}
 	if (enc.isLeftH())
 	{
 		SET_TEMP -= 10;
 		displayRedraw = true;
-		Display();
 	}
 	if (enc.isClick())
 	{
 		TRY = 0;
 		START = true;
 		displayRedraw = true;
-		Display();
-	}
+  }
 }
 
 void ReadSensors(){	
@@ -126,6 +121,9 @@ void Display(){
 			case 2:
 			lcd.setCursor(0, 1);
 			lcd.println("   !!ERROR!!    ");
+      digitalWrite(PIEZO, LOW);
+	    digitalWrite(VALVE, LOW);
+	    digitalWrite(VENT, LOW);
 			break;
 
 			case 3:
