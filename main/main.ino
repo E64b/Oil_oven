@@ -20,7 +20,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2); //Init LCD
 /*Init vals*/
 uint8_t SET_TEMP = 0;
 uint8_t TRY = 0;
-bool displayRedraw = true, WORK = false, START = false; //Флаги для мониторинга состояния 
+bool displayRedraw = true, WORK = false, START = false, ERROR = false; //Флаги для мониторинга состояния 
 int gis = 3;
 float TEMP = 0;
 uint32_t timer = 0;
