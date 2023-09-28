@@ -19,13 +19,14 @@ MicroDS18B20<2> sensor1;   //Init sensor
 LiquidCrystal_I2C lcd(0x27, 16, 2); //Init LCD
 
 /*Init vals*/
-uint8_t value = 0;
+uint8_t SET_TEMP = 0;
 uint8_t TRY = 0;
-bool displayRedraw = true,  WORK = false;
-int gis;
+bool displayRedraw = true, WORK = false, START = false; //Флаги для мониторинга состояния 
+int gis = 3;
 float TEMP = 0;
 bool IGNITION = LOW, FUEL = LOW, BOOST = LOW;
 uint32_t timer = 0;
+float OLD_TEMP = 0;
 
 void setup(){
 	lcd.begin();
@@ -45,23 +46,24 @@ void setup(){
 
 void Enc(){
 	if (enc1.isRight()){
-		value++;
+		SET_TEMP++;
 		displayRedraw = true;
 	}
 	if (enc1.isLeft()){
-		value--;
+		SET_TEMP--;
 		displayRedraw = true;
 	}
 	if (enc1.isRightH()){
-		value += 10;
+		SET_TEMP += 10;
 		displayRedraw = true;
 	}
 	if (enc1.isLeftH()){
-		value -= 10;
+		SET_TEMP -= 10;
 		displayRedraw = true;
 	}
 	if (enc1.isClick()){
-		WORK = true;
+		TRY = 0;
+		START = true;
 		displayRedraw = true;
 	}
 }
@@ -73,7 +75,12 @@ void ReadSensors(){
 		tmr = millis();
 		if (sensor.readTemp())
 		{
+			OLD_TEMP = TEMP;
 			TEMP = round(sensor.getTemp());
+			if (OLD_TEMP != TEMP)
+			{
+				displayRedraw = true;
+			}
 		}			
 		sensor.requestTemp();
 	}
@@ -85,77 +92,92 @@ void Display(){
 		lcd.clear();
 		displayRedraw = false;
 		lcd.setCursor(0, 0);
-		lcd.print("YCTAH ");
-		lcd.print(value);
+		lcd.print("SET ");
+		lcd.print(SET_TEMP);
 		lcd.print(' ');
-		lcd.print("TEMP");
+		lcd.print("NOW ");
 		lcd.print(TEMP);		
 
-		Switch(flag) 
+		switch (flag) 
 		{
-			Case 0:
+			case 0:
 			lcd.setCursor(0, 1);
 			lcd.println("    ^^FLAME^^   ");
 			break;
 
-			Case 1:
+			case 1:
 			lcd.setCursor(0, 1);
 			lcd.println("   **COOLING**  ");
 			break;
 
-			Case 2:
+			case 2:
 			lcd.setCursor(0, 1);
 			lcd.println("   !!ERROR!!    ");
+			break;
+
+			case 3:
+			lcd.setCursor(0, 1);
+			lcd.println("   ++START++   ");
 			break;
 		}
 	}
 }
 
-void Work(){
+void Work()
+{
 	/*Режим розжига*/
-	if ((FLAME == LOW) and (TRY < 5) and (TEMP < value))
-	{
-		
+	if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and (START == true))
+	{	
+		flag = 3;
+		TRY++;
+		BOOST = HIGH;
+		delay(1000);
+		FUEl = HIGH;
+		delay(500);
+		IGNITION = HIGH;
+		delay(500); //Пол секунды на устаканивание
+
+
+		if (TRY >= 5)
+		{
+			displayRedraw = true;
+			START = false;
+			flag = 2;
+		}
+
+		if (FLAME == LOW)
+		{
+			displayRedraw = true;
+			TRY = 0;
+			WORK = true;
+			START = false;
+			IGNITION = LOW;
+		}
 	}
 
 	/*Режим работы*/
-	if (WORK)
-	{
-
+	if ((WORK == true) and (TEMP <= SET_TEMP))
+	{	
+		flag = 0;
+		FUEL = HIGH;
+		BOOST = HIGH;
+	
+		if (FLAME == HIGH)
+		{
+			displayRedraw = true;
+			flag = 2;
+			WORK = false;
+		}
 	}
-	else 
+
+	/* Режим ожидания */
+	if (TEMP >= SET_TEMP + gis)
 	{
-		IGNITION = LOW;
-		FUEL = LOW;
-		BOOST = LOW;
-		WORK = false;
-	}
-
-if ((FLAME == LOW) and (TRY < 5) and (TEMP < value) and (WORK == true))
-{
-		if (FLAME == LOW && flag3 == 0)
-		{
-			digitalWrite(PIEZO, LOW);
-			digitalWrite(VALVE, HIGH);
-			digitalWrite(VENT, HIGH);
-			
-			flag2 = 0;
-			flag1 = 0;
-		}
-		if (sensor1.getTemp() > (value + gis))
-		{
-			digitalWrite(VENT, LOW);
-			digitalWrite(VALVE, LOW);
-			
-			flag3 = 1;
-		}
-
-		if (FLAME == HIGH && flag2 == 5)
-		{
-			digitalWrite(PIEZO, LOW);
-			digitalWrite(VENT, LOW);
-			digitalWrite(VALVE, LOW);			
-		}
+			flag = 1;
+			IGNITION = LOW;
+			FUEL = LOW;
+			BOOST = LOW;
+			WORK = false;
 	}
 }
 
