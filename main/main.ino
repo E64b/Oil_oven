@@ -12,10 +12,9 @@
 #define VENT 8
 #define PIEZO 9 
 #define VALVE 10
-#define digitalRead(A1) FLAME
 
 Encoder enc1(CLK, DT, SW);
-MicroDS18B20<2> sensor1;   //Init sensor
+MicroDS18B20<2> sensor;   //Init sensor
 LiquidCrystal_I2C lcd(0x27, 16, 2); //Init LCD
 
 /*Init vals*/
@@ -27,12 +26,15 @@ float TEMP = 0;
 bool IGNITION = LOW, FUEL = LOW, BOOST = LOW;
 uint32_t timer = 0;
 float OLD_TEMP = 0;
+int flag = 0;
+bool FLAME;
 
-void setup(){
+void setup()
+{
 	lcd.begin();
 	lcd.backlight();
 	lcd.home();
-	lcd.print("Fucking fire");
+	lcd.print("FIRE CONTROL");
 
 	pinMode(VENT, OUTPUT); 
 	pinMode(A1, INPUT);
@@ -69,6 +71,7 @@ void Enc(){
 }
 
 void ReadSensors(){	
+  FLAME = digitalRead(A1);
 	static uint32_t tmr;
 	if (millis() - tmr >= 800)
 	{
@@ -132,7 +135,7 @@ void Work()
 		TRY++;
 		BOOST = HIGH;
 		delay(1000);
-		FUEl = HIGH;
+		FUEL = HIGH;
 		delay(500);
 		IGNITION = HIGH;
 		delay(500); //Пол секунды на устаканивание
