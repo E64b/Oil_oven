@@ -144,10 +144,19 @@ void Work()
 		flag = 3;
 		TRY++;
 		BOOST = HIGH;
+    digitalWrite(PIEZO, IGNITION);
+	  digitalWrite(VALVE, FUEL);
+	  digitalWrite(VENT, BOOST);
 		delay(1000);
 		FUEL = HIGH;
+    digitalWrite(PIEZO, IGNITION);
+	  digitalWrite(VALVE, FUEL);
+	  digitalWrite(VENT, BOOST);
 		delay(500);
 		IGNITION = HIGH;
+    digitalWrite(PIEZO, IGNITION);
+	  digitalWrite(VALVE, FUEL);
+	  digitalWrite(VENT, BOOST);
 		delay(500); //Пол секунды на устаканивание
 
 
@@ -156,6 +165,9 @@ void Work()
 			displayRedraw = true;
 			START = false;
 			flag = 2;
+      digitalWrite(PIEZO, IGNITION);
+	    digitalWrite(VALVE, FUEL);
+	    digitalWrite(VENT, BOOST);
 		}
 
 		if (FLAME == LOW)
@@ -165,6 +177,9 @@ void Work()
 			WORK = true;
 			START = false;
 			IGNITION = LOW;
+      digitalWrite(PIEZO, IGNITION);
+	    digitalWrite(VALVE, FUEL);
+	    digitalWrite(VENT, BOOST);
 		}
 	}
 
@@ -174,12 +189,18 @@ void Work()
 		flag = 0;
 		FUEL = HIGH;
 		BOOST = HIGH;
+    digitalWrite(PIEZO, IGNITION);
+	  digitalWrite(VALVE, FUEL);
+	  digitalWrite(VENT, BOOST);
 	
 		if (FLAME == HIGH)
 		{
 			displayRedraw = true;
 			flag = 2;
 			WORK = false;
+      digitalWrite(PIEZO, IGNITION);
+	    digitalWrite(VALVE, FUEL);
+	    digitalWrite(VENT, BOOST);
 		}
 	}
 
@@ -191,6 +212,9 @@ void Work()
 			FUEL = LOW;
 			BOOST = LOW;
 			WORK = false;
+      digitalWrite(PIEZO, IGNITION);
+	    digitalWrite(VALVE, FUEL);
+	    digitalWrite(VENT, BOOST);
 	}
 }
 
