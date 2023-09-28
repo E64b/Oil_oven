@@ -47,6 +47,7 @@ void setup()
 }
 
 void Enc(){
+	enc1.tick();
 	if (enc1.isRight()){
 		SET_TEMP++;
 		displayRedraw = true;
