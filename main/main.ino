@@ -95,6 +95,7 @@ void Display() {
 void Work() {
   /*Режим розжига*/
   if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and  (START == true) and (ERR = false)) {
+    displayRedraw = true;
     flag = 3;
     digitalWrite(VENT, HIGH);
     delay(1000);
