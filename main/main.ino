@@ -20,7 +20,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2); // Init LCD
 /*Init vals*/
 uint8_t SET_TEMP = 0;
 uint8_t TRY = 0;
-bool displayRedraw = true, WORK = false, START = false, ERROR = false;
+bool displayRedraw = true, WORK = false, START = false, ERR = false;
 int gis = 3;
 float TEMP = 0, OLD_TEMP = 0;
 int flag = 0;
@@ -94,7 +94,7 @@ void Display() {
 
 void Work() {
   /*Режим розжига*/
-  if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and  (START == true) and (ERROR = false)) {
+  if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and  (START == true) and (ERR = false)) {
     flag = 3;
     digitalWrite(VENT, HIGH);
     delay(1000);
@@ -128,7 +128,7 @@ void Work() {
       digitalWrite(PIEZO, LOW);
       digitalWrite(VALVE, LOW);
       digitalWrite(VENT, LOW);
-      ERROR = true;
+      ERR = true;
     }
   }
 
@@ -141,7 +141,7 @@ void Work() {
       displayRedraw = true;
       flag = 2;
       WORK = false;
-      ERROR = true;
+      ERR = true;
       digitalWrite(PIEZO, LOW);
       digitalWrite(VALVE, LOW);
       digitalWrite(VENT, LOW);
@@ -161,7 +161,7 @@ void Work() {
   }
 
   /* Режим ошибки */
-  if (ERROR) // Если есть ошибка, больше не пытаемся запускать
+  if (ERR) // Если есть ошибка, больше не пытаемся запускать
   {
     START = false;
     WORK = false;
@@ -192,7 +192,7 @@ void Enc() {
   if (enc.isClick()) {
     TRY = 0;
     START = true;
-    ERROR = false;
+    ERR = false;
     displayRedraw = true;
   }
 }
