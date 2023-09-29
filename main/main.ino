@@ -22,14 +22,11 @@ uint8_t SET_TEMP = 0;
 uint8_t TRY = 0;
 bool displayRedraw = true, WORK = false, START = false, ERROR = false; //Флаги для мониторинга состояния 
 int gis = 3;
-float TEMP = 0;
-uint32_t timer = 0;
-float OLD_TEMP = 0;
+float TEMP = 0, OLD_TEMP = 0;
 int flag = 0;
 bool FLAME;
 
-void setup()
-{
+void setup(){
 	lcd.begin();
 	lcd.backlight();
 	lcd.home();
@@ -45,17 +42,14 @@ void setup()
 }
 
 void ReadSensors(){	
-  FLAME = digitalRead(A1);
+	FLAME = digitalRead(A1);
 	static uint32_t tmr;
-	if (millis() - tmr >= 800)
-	{
+	if (millis() - tmr >= 800){
 		tmr = millis();
-		if (sensor.readTemp())
-		{
+		if (sensor.readTemp()){
 			OLD_TEMP = TEMP;
 			TEMP = round(sensor.getTemp());
-			if (OLD_TEMP != TEMP)
-			{
+			if (OLD_TEMP != TEMP){
 				displayRedraw = true;
 			}
 		}			
@@ -64,8 +58,7 @@ void ReadSensors(){
 }
 
 void Display(){
-	if (displayRedraw == true)
-	{
+	if (displayRedraw == true){
 		lcd.clear();
 		displayRedraw = false;
 		lcd.setCursor(0, 0);
@@ -75,7 +68,7 @@ void Display(){
 		lcd.print("NOW ");
 		lcd.print(TEMP);		
 
-		switch (flag) 
+		switch (flag)
 		{
 			case 0:
 			lcd.setCursor(0, 1);
@@ -90,9 +83,6 @@ void Display(){
 			case 2:
 			lcd.setCursor(0, 1);
 			lcd.println("   !!ERROR!!    ");
-			digitalWrite(PIEZO, LOW);
-			digitalWrite(VALVE, LOW);
-			digitalWrite(VENT, LOW);
 			break;
 
 			case 3:
@@ -108,78 +98,78 @@ void Work()
 	/*Режим розжига*/
 	if ((FLAME == HIGH) and (TRY < 5) and (TEMP < SET_TEMP) and (START == true) and (ERROR = false))
 	{	
-		flag = 3;
-		TRY++;
-		digitalWrite(PIEZO, LOW);
-		digitalWrite(VALVE, LOW);
+		flag = 3;		
 		digitalWrite(VENT, HIGH);
 		delay(1000);
-		digitalWrite(PIEZO, LOW);
 		digitalWrite(VALVE, HIGH);
-		digitalWrite(VENT, HIGH);
 		delay(500);
 		digitalWrite(PIEZO, HIGH);
-		digitalWrite(VALVE, HIGH);
-		digitalWrite(VENT, HIGH);
-		delay(2500); //Пол секунды на устаканивание
-		FLAME = digitalRead(A1);
+		delay(2500); //Время на стабилизацию горения
 
-		if (FLAME == HIGH)
-		{
-		digitalWrite(PIEZO, LOW);
-	  digitalWrite(VALVE, LOW);
-	  digitalWrite(VENT, LOW);
-		}
+			if (digitalRead(A1) == HIGH) //Если нет запуска, считаем попытки
+			{
+				TRY++;
+				digitalWrite(PIEZO, LOW);
+				digitalWrite(VALVE, LOW);
+				digitalWrite(VENT, LOW);
+			}
 
-		if (TRY >= 5)
-		{
+			if (digitalRead(A1) == LOW) //Если запуск удачный, переходим в режим работы
+			{
+				digitalWrite(PIEZO, LOW); //Выключаем поджиг
+				displayRedraw = true;
+				TRY = 0;
+				WORK = true;
+				START = false;
+			}
+
+			if (TRY >= 5) //После 5 попыток, выключаем все исполнители и попадаем в ошибку
+			{
 			displayRedraw = true;
 			START = false;
 			flag = 2;
 			digitalWrite(PIEZO, LOW);
 			digitalWrite(VALVE, LOW);
 			digitalWrite(VENT, LOW);
-      ERROR = true;
-		}
+			ERROR = true;
+			}
 
-		if (FLAME == LOW)
-		{
-			displayRedraw = true;
-			TRY = 0;
-			WORK = true;
-			START = false;
-			digitalWrite(PIEZO, LOW);
-			digitalWrite(VALVE, HIGH);
-			digitalWrite(VENT, HIGH);
-		}
+			
 	}
 
 	/*Режим работы*/
 	if ((WORK == true) and (TEMP <= SET_TEMP))
 	{	
-		flag = 0;
-		digitalWrite(PIEZO, LOW);
-	  digitalWrite(VALVE, HIGH);
-	  digitalWrite(VENT, HIGH);
-	
-		if (FLAME == HIGH)
+		flag = 0;		
+			
+		if (FLAME == HIGH) //Если огонь потух, выключаем все и впадаем в ошибку
 		{
 			displayRedraw = true;
 			flag = 2;
 			WORK = false;
-      digitalWrite(PIEZO, LOW);
-	    digitalWrite(VALVE, LOW);
-	    digitalWrite(VENT, LOW);
+			ERROR = true;
+			digitalWrite(PIEZO, LOW);
+			digitalWrite(VALVE, LOW);
+			digitalWrite(VENT, LOW);
 		}
 	}
 
 	/* Режим ожидания */
-	if (TEMP >= SET_TEMP + gis)
+	if (TEMP >= SET_TEMP + gis) //Если догрели до нужной температуры, выключаем все и переходим в режим готовности к запуску
 	{
-			  START = true;
-				flag = 1;
-				WORK = false;
-		  digitalWrite(PIEZO, LOW);
+			START = true;
+			flag = 1;
+			WORK = false;
+			digitalWrite(PIEZO, LOW);
+			digitalWrite(VALVE, LOW);
+			digitalWrite(VENT, LOW);
+	}
+	/* Режим ошибки */
+	if (ERROR) //Если есть ошибка, больше не пытаемся запускать
+	{
+			START = false;
+			WORK = false;
+			digitalWrite(PIEZO, LOW);
 			digitalWrite(VALVE, LOW);
 			digitalWrite(VENT, LOW);
 	}
@@ -187,7 +177,7 @@ void Work()
 
 void Enc()
 {
-   enc.tick();
+	enc.tick();
 	if (enc.isRight())
 	{
 		SET_TEMP++;
@@ -212,15 +202,14 @@ void Enc()
 	{
 		TRY = 0;
 		START = true;
+		ERROR = false;
 		displayRedraw = true;
   }	
 }
 void loop(){
-	/*Send command exe*/
-
 	ReadSensors();
 	Display();
 	Work();	
-  Enc();
+	Enc();
  
 }
