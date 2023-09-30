@@ -19,6 +19,7 @@ void Work (){
 				digitalWrite (PIEZO, LOW);
 				digitalWrite (VALVE, LOW);
 				digitalWrite (VENT, LOW);
+				Display ();
 				}
 
 			/*If the launch is successful, we switch to operation mode*/
@@ -51,7 +52,6 @@ void Work (){
 	/*Operating mode*/
 	if ((WORK == true) and (TEMP <= SET_TEMP)){
 		flag = 0;
-		Display ();
 
 		/*If the fire goes out, turn off everything and fall into error*/
 		if (FLAME == HIGH){
@@ -75,12 +75,12 @@ void Work (){
 		digitalWrite (PIEZO, LOW);
 		digitalWrite (VALVE, LOW);
 		digitalWrite (VENT, LOW);
-		Display ();
 		}
 
 	/* Error mode */
-	if (ERR) // If there is an error, we don't try to run it anymore
-		{
+	// If there is an error, we don't try to run it anymore
+	if (ERR){
+		flag = 2;
 		START = false;
 		WORK = false;
 		digitalWrite (PIEZO, LOW);
