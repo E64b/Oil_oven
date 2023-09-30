@@ -30,5 +30,6 @@ void Enc (){
 		lcd.home;
 		lcd.print ("+SET TEMP SAVE+");
 		delay (1000);
+		displayRedraw = true;
 		}
 	}
