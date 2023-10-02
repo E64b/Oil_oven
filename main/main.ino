@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 void setup (){
 	lcd.begin ();
 	lcd.backlight ();
