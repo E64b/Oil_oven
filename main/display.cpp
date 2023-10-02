@@ -1,17 +1,17 @@
 #include "main.h"
 /*Display Processing*/
 void Display (){
-	if (displayRedraw == true){
+	if (uiState.displayRedraw == true){
 		lcd.clear ();
-		displayRedraw = false;
+		uiState.displayRedraw = false;
 		lcd.setCursor (0, 0);
 		lcd.print ("SET ");
-		lcd.print (SET_TEMP);
+		lcd.print (uiState.SET_TEMP);
 		lcd.print (' ');
 		lcd.print ("NOW ");
-		lcd.print (TEMP);
+		lcd.print (uiState.TEMP);
 
-		switch (flag){
+		switch (uiState.flag){
 				case 0:
 					lcd.setCursor (0, 1);
 					lcd.println ("    ^^FLAME^^   ");

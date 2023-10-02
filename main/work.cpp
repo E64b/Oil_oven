@@ -1,12 +1,12 @@
 #include "main.h"
 void Work (){
 	/*Ignition mode*/
-	if ((START == true) and (ERR == false) and (TEMP <= SET_TEMP)){
+	if ((uiState.START == true) and (uiState.ERR == false) and (uiState.TEMP <= uiState.SET_TEMP)){
 		/*If you are ready to launch, then we make 5 attempts*/
-		for (TRY; TRY < 5; TRY++){
+		for (uiState.TRY; uiState.TRY < 5; uiState.TRY++){
 			Display ();
-			displayRedraw = true;
-			flag = 3;
+			uiState.displayRedraw = true;
+			uiState.flag = 3;
 			digitalWrite (VENT, HIGH);
 			delay (1000);
 			digitalWrite (VALVE, HIGH);
@@ -25,23 +25,23 @@ void Work (){
 			/*If the launch is successful, we switch to operation mode*/
 			if (digitalRead (A1) == LOW){
 				digitalWrite (PIEZO, LOW);
-				displayRedraw = true;
-				TRY = 0;
-				WORK = true;
-				START = false;
+				uiState.displayRedraw = true;
+				uiState.TRY = 0;
+				uiState.WORK = true;
+				uiState.START = false;
 				Display ();
 				break;
 				}
 
 			/*After 5 attempts, we turn off all performers and get into an error*/
-			if (TRY >= 5){
-				displayRedraw = true;
-				START = false;
-				flag = 2;
+			if (uiState.TRY >= 5){
+				uiState.displayRedraw = true;
+				uiState.START = false;
+				uiState.flag = 2;
 				digitalWrite (PIEZO, LOW);
 				digitalWrite (VALVE, LOW);
 				digitalWrite (VENT, LOW);
-				ERR = true;
+				uiState.ERR = true;
 				Display ();
 				break;
 				}
@@ -50,15 +50,15 @@ void Work (){
 		}
 
 	/*Operating mode*/
-	if ((WORK == true) and (TEMP <= SET_TEMP)){
-		flag = 0;
+	if ((uiState.WORK == true) and (uiState.TEMP <= uiState.SET_TEMP)){
+		uiState.flag = 0;
 
 		/*If the fire goes out, turn off everything and fall into error*/
-		if (FLAME == HIGH){
-			displayRedraw = true;
-			flag = 2;
-			WORK = false;
-			ERR = true;
+		if (uiState.FLAME == uiState.HIGH){
+			uiState.displayRedraw = true;
+			uiState.flag = 2;
+			uiState.WORK = false;
+			uiState.ERR = true;
 			digitalWrite (PIEZO, LOW);
 			digitalWrite (VALVE, LOW);
 			digitalWrite (VENT, LOW);
@@ -68,10 +68,10 @@ void Work (){
 
 	/* Standby mode */
 /*If they are heated to the desired temperature, turn off everything and switch to the ready-to-start mode*/
-	if (TEMP >= SET_TEMP + gis){
-		START = true;
-		flag = 1;
-		WORK = false;
+	if (uiState.TEMP >= uiState.SET_TEMP + uiState.gis){
+		uiState.START = true;
+		uiState.flag = 1;
+		uiState.WORK = false;
 		digitalWrite (PIEZO, LOW);
 		digitalWrite (VALVE, LOW);
 		digitalWrite (VENT, LOW);
@@ -79,10 +79,10 @@ void Work (){
 
 	/* Error mode */
 	// If there is an error, we don't try to run it anymore
-	if (ERR){
-		flag = 2;
-		START = false;
-		WORK = false;
+	if (uiState.ERR){
+		uiState.flag = 2;
+		uiState.START = false;
+		uiState.WORK = false;
 		digitalWrite (PIEZO, LOW);
 		digitalWrite (VALVE, LOW);
 		digitalWrite (VENT, LOW);

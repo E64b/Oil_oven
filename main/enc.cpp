@@ -3,33 +3,33 @@
 void Enc (){
 	enc.tick ();
 	if (enc.isRight ()){
-		SET_TEMP++;
-		displayRedraw = true;
+		uiState.SET_TEMP++;
+		uiState.displayRedraw = true;
 		}
 	if (enc.isLeft ()){
-		SET_TEMP--;
-		displayRedraw = true;
+		uiState.SET_TEMP--;
+		uiState.displayRedraw = true;
 		}
 	if (enc.isRightH ()){
-		SET_TEMP += 10;
-		displayRedraw = true;
+		uiState.SET_TEMP += 10;
+		uiState.displayRedraw = true;
 		}
 	if (enc.isLeftH ()){
-		SET_TEMP -= 10;
-		displayRedraw = true;
+		uiState.SET_TEMP -= 10;
+		uiState.displayRedraw = true;
 		}
 	if (enc.isClick ()){
-		TRY = 0;
-		START = true;
-		ERR = false;
-		displayRedraw = true;
+		uiState.TRY = 0;
+		uiState.START = true;
+		uiState.ERR = false;
+		uiState.displayRedraw = true;
 		}
 	if (enc.isHolded ()){
 		lcd.clear ();
-		EPROM.write (0, (float)SET_TEMP * 10.0);
-		lcd.home;
+		EEPROM.write (0, (float)uiState.SET_TEMP * 10.0);
+		lcd.home();
 		lcd.print ("+SET TEMP SAVE+");
 		delay (1000);
-		displayRedraw = true;
+		uiState.displayRedraw = true;
 		}
 	}
