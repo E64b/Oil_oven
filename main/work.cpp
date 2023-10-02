@@ -1,4 +1,5 @@
 #include "main.h"
+
 void Work (){
 	/*Ignition mode*/
 	if ((uiState.START == true) and (uiState.ERR == false) and (uiState.TEMP <= uiState.SET_TEMP)){
@@ -23,7 +24,7 @@ void Work (){
 				}
 
 			/*If the launch is successful, we switch to operation mode*/
-			if (digitalRead (A1) == LOW){
+			if (digitalRead(A1) == LOW){
 				digitalWrite (PIEZO, LOW);
 				uiState.displayRedraw = true;
 				uiState.TRY = 0;

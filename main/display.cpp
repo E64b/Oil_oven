@@ -1,4 +1,5 @@
 #include "main.h"
+
 /*Display Processing*/
 void Display (){
 	if (uiState.displayRedraw == true){

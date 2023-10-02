@@ -1,4 +1,5 @@
 #include "main.h"
+
 void ReadSensors (){
 	uiState.FLAME = digitalRead (A1);
 	static uint32_t tmr;

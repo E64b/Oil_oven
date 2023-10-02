@@ -1,10 +1,10 @@
 #pragma once
 
-#include <stdio.h>
 #include <Arduino.h>
-#include <EEPROM.h>
-#include <GyverEncoder.h>
+//#include <stdio.h>
 #include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+#include <EncButton.h>
 #include <Wire.h>
 #include <microDS18B20.h>
 
@@ -29,9 +29,9 @@ float TEMP = 0;
 float OLD_TEMP = 0;
 } UIState;
 
-extern UIState uiState;
 
-extern Encoder enc;
+extern UIState uiState;
+extern EncButton eb;
 extern MicroDS18B20<2> sensor;
 extern LiquidCrystal_I2C lcd;
 

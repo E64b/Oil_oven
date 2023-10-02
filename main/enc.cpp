@@ -1,33 +1,34 @@
 #include "main.h"
+
 /*Encoder Processing*/
 void Enc (){
-	enc.tick ();
-	if (enc.isRight ()){
+	eb.tick ();
+	if (eb.right ()){
 		uiState.SET_TEMP++;
 		uiState.displayRedraw = true;
 		}
-	if (enc.isLeft ()){
+	if (eb.left ()){
 		uiState.SET_TEMP--;
 		uiState.displayRedraw = true;
 		}
-	if (enc.isRightH ()){
+	if (eb.rightH ()){
 		uiState.SET_TEMP += 10;
 		uiState.displayRedraw = true;
 		}
-	if (enc.isLeftH ()){
+	if (eb.leftH ()){
 		uiState.SET_TEMP -= 10;
 		uiState.displayRedraw = true;
 		}
-	if (enc.isClick ()){
+	if (eb.click ()){
 		uiState.TRY = 0;
 		uiState.START = true;
 		uiState.ERR = false;
 		uiState.displayRedraw = true;
 		}
-	if (enc.isHolded ()){
+	if (eb.hold()){
 		lcd.clear ();
 		EEPROM.write (0, (float)uiState.SET_TEMP * 10.0);
-		lcd.home();
+		lcd.home ();
 		lcd.print ("+SET TEMP SAVE+");
 		delay (1000);
 		uiState.displayRedraw = true;

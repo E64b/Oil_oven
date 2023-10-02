@@ -1,8 +1,8 @@
 #include "main.h"
 
-Encoder enc(CLK, DT, SW, TYPE2);
 MicroDS18B20<2> sensor;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+EncButton eb(CLK, DT, SW);
 
 UIState uiState;
 
