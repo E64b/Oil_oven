@@ -54,7 +54,7 @@ void Work (){
 		uiState.flag = 0;
 
 		/*If the fire goes out, turn off everything and fall into error*/
-		if (uiState.FLAME == uiState.HIGH){
+		if (uiState.FLAME == HIGH){
 			uiState.displayRedraw = true;
 			uiState.flag = 2;
 			uiState.WORK = false;
