@@ -2,7 +2,7 @@
 
 void Work (){
 	/*Ignition mode*/
-	if ((uiState.START == true) and (uiState.ERR == false) and (uiState.TEMP <= uiState.SET_TEMP)){
+	if (uiState.START and !uiState.ERR and (uiState.TEMP <= uiState.SET_TEMP)){
 		/*If you are ready to launch, then we make 5 attempts*/
 		for (uiState.TRY; uiState.TRY < 5; uiState.TRY++){
 			Display ();
@@ -25,7 +25,7 @@ void Work (){
 				}
 
 			/*If the launch is successful, we switch to operation mode*/
-			if (digitalRead(A1) == LOW){
+			if (digitalRead (A1) == LOW){
 				digitalWrite (PIEZO, LOW);
 				uiState.displayRedraw = true;
 				uiState.TRY = 0;
@@ -36,7 +36,7 @@ void Work (){
 				}
 
 			/*After 5 attempts, we turn off all performers and get into an error*/
-			if (uiState.TRY >= 5){
+			if (uiState.TRY >= 4){
 				uiState.displayRedraw = true;
 				uiState.START = false;
 				uiState.flag = 2;

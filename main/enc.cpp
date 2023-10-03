@@ -23,6 +23,7 @@ void Enc (){
 		uiState.TRY = 0;
 		uiState.START = true;
 		uiState.ERR = false;
+		uiState.FirstStart = true;
 		uiState.displayRedraw = true;
 		}
 	if (eb.hold()){

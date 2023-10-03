@@ -25,6 +25,7 @@ bool displayRedraw = true;
 bool WORK = false;
 bool START = false;
 bool ERR = false;
+bool FirstStart = true;
 bool FLAME;
 float TEMP = 0;
 float OLD_TEMP = 0;
