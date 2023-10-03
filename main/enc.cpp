@@ -19,7 +19,7 @@ void Enc (){
 		uiState.SET_TEMP -= 10;
 		uiState.displayRedraw = true;
 		}
-	if (eb.click ()){
+	if (eb.press ()){
 		uiState.TRY = 0;
 		uiState.START = true;
 		uiState.ERR = false;

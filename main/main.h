@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-//#include <stdio.h>
+#include <stdio.h>
 #include <LiquidCrystal_I2C.h>
 #include <EEPROM.h>
 #include <EncButton.h>
@@ -20,6 +20,7 @@ uint8_t SET_TEMP = 0;
 uint8_t TRY = 0;
 uint8_t flag = 0;
 uint8_t gis = 3;
+uint32_t DisplayDelay = 0;
 bool displayRedraw = true;
 bool WORK = false;
 bool START = false;

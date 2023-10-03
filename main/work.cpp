@@ -17,6 +17,7 @@ void Work (){
 
 			/*If there is no startup, turn off everything*/
 			if (digitalRead (A1) == HIGH){
+				uiState.displayRedraw = true;
 				digitalWrite (PIEZO, LOW);
 				digitalWrite (VALVE, LOW);
 				digitalWrite (VENT, LOW);
@@ -53,9 +54,8 @@ void Work (){
 	/*Operating mode*/
 	if ((uiState.WORK == true) and (uiState.TEMP <= uiState.SET_TEMP)){
 		uiState.flag = 0;
-
 		/*If the fire goes out, turn off everything and fall into error*/
-		if (uiState.FLAME == HIGH){
+		if (digitalRead (A1) == HIGH){
 			uiState.displayRedraw = true;
 			uiState.flag = 2;
 			uiState.WORK = false;

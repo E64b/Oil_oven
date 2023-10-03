@@ -2,7 +2,8 @@
 
 /*Display Processing*/
 void Display (){
-	if (uiState.displayRedraw == true){
+	if ((uiState.displayRedraw == true ) or (millis () - uiState.DiplayDelay >= 500)){
+	uiState.DisplayDelay = millis();
 		lcd.clear ();
 		uiState.displayRedraw = false;
 		lcd.setCursor (0, 0);
