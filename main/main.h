@@ -14,22 +14,21 @@
 #define VENT 8
 #define PIEZO 9
 #define VALVE 10
-
-typedef struct {
-uint8_t SET_TEMP = 0;
-uint8_t TRY = 0;
-uint8_t flag = 0;
-uint8_t gis = 3;
-uint32_t DisplayDelay = 0;
-bool displayRedraw = true;
-bool WORK = false;
-bool START = false;
-bool ERR = false;
-bool FirstStart = true;
-bool FLAME;
-float TEMP = 0;
-float OLD_TEMP = 0;
-} UIState;
+#define FLAME digitalRead(2)
+typedef struct{
+	uint8_t SET_TEMP=0;
+	uint8_t TRY=0;
+	uint8_t flag=0;
+	uint8_t gis=3;
+	uint32_t DisplayDelay=0;
+	bool displayRedraw=true;
+	bool WORK=false;
+	bool START=false;
+	bool ERR=false;
+	bool FirstStart=true;
+	float TEMP=0;
+	float OLD_TEMP=0;
+	} UIState;
 
 
 extern UIState uiState;

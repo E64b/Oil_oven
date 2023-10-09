@@ -12,14 +12,13 @@ void setup(){
 	lcd.home();
 	lcd.print("FIRE CONTROL");
 
-	pinMode (VENT, OUTPUT);
-	pinMode (A1, INPUT);
-	pinMode (PIEZO, OUTPUT);
-	pinMode (VALVE, OUTPUT);
+	pinMode(VENT, OUTPUT);
+	pinMode(2, INPUT);
+	pinMode(PIEZO, OUTPUT);
+	pinMode(VALVE, OUTPUT);
 
-	uiState.FLAME = digitalRead(A1);
-	uiState.SET_TEMP = (float)EEPROM.read(0) / 10.0;
-	delay (500);
+	uiState.SET_TEMP=(float)EEPROM.read(0)/10.0;
+	delay(500);
 	lcd.clear();
 	}
 
