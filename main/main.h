@@ -15,12 +15,14 @@
 #define PIEZO 9
 #define VALVE 10
 #define FLAME digitalRead(2)
+
 typedef struct{
 	uint8_t SET_TEMP=0;
 	uint8_t TRY=0;
 	uint8_t flag=0;
 	uint8_t gis=3;
 	uint32_t DisplayDelay=0;
+	uint8_t CurentPhase=0;
 	bool displayRedraw=true;
 	bool WORK=false;
 	bool START=false;
